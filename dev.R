@@ -1,22 +1,29 @@
 devtools::load_all()
 
-SURVEY <- surveyjR::SURVEY$cancellation
+SURVEY <- preStudy::survey
 
 library(shiny)
 
 ui <- fluidPage(
   theme = bslib::bs_theme(bootswatch = "slate"),
-  surveyOutput("blobb")
+  surveyOutput("blobb"),
+  actionButton("button", "Next Page")
 )
 
 
 server <- function(input, output, session) {
   my_survey <- survey(SURVEY)
   output$blobb <- renderSurvey(my_survey)
+  observeEvent(input$button, {
+    nextPage("blobb")
+  })
 }
 
 
 shinyApp(ui, server)
+
+
+survey(SURVEY) %>% nextPage()
 
 
 # interact with the widget
@@ -39,6 +46,8 @@ s3 <- htmlwidgets::onRender(s, JS("function(el, x, data){this.showProgressBar = 
 s3 <- htmlwidgets::onRender(s, JS("function(el, x, data){console.log(this)}"))
 s3
 
+
+
 # Example: alter survey_json
 showQuestionNumber <- function(survey, on = TRUE) {
   s <- jsonlite::fromJSON(survey$x$survey_json)
@@ -51,27 +60,6 @@ showQuestionNumber <- function(survey, on = TRUE) {
   survey
 }
 
-s %>% showQuestionNumber()
+s %>% showQuestionNumber(on = TRUE)
+s %>% showQuestionNumber(on = FALSE)
 
-
-# Example: apply method from JS lib
-addNewPage <- function(survey, page_name) {
-  ## How can we access the survey object in a java script function?
-  survey %>%
-    # el is the whole html element
-    # x is exactly what we pass in the survey() as x
-    # data is data which can be passed to JS
-    # this is the widget instance object
-    htmlwidgets::onRender(JS("function(el, x, data) {this.s.addNewPage('blobb');}"))
-}
-
-
-addNewPage() <- function(survey, page_name) {
-  message <- list(id = id, page_name = page_name)
-  session <- shiny::getDefaultReactiveDomain()
-  session$sendCustomMessage("survey::addNewPage", message)
-}
-
-
-
-s %>% addNewPage(page_name = NULL)

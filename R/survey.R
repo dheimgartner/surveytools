@@ -8,9 +8,12 @@
 survey <- function(survey_json, width = NULL, height = NULL, elementId = NULL) {
 
   # forward options using x
-  x = list(
+  x <- list(
     survey_json = survey_json
   )
+
+  # API tracker
+  x$api <- list()
 
   # create widget
   htmlwidgets::createWidget(
