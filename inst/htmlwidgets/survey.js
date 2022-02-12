@@ -13,6 +13,11 @@ HTMLWidgets.widget({
 
       renderValue: function(x) {
 
+        // apply bootstrap
+        Survey
+          .StylesManager
+          .applyTheme("bootstrap");
+
         // update survey object
         survey = new Survey.Model(x.survey_json);
 
@@ -24,7 +29,7 @@ HTMLWidgets.widget({
         survey.onComplete.add(alertResults);
 
         $(function() {
-          $("#" + el.id).Survey({ model: survey });
+          $(el).Survey({ model: survey });
         });
 
       },
