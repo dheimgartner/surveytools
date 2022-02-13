@@ -18,6 +18,9 @@ survey <- function(survey_json, width = NULL, height = NULL, elementId = NULL) {
   # answer tracker
   x$answers <- list()
 
+  # test
+  x$test <- list()
+
   # create widget
   htmlwidgets::createWidget(
     name = 'survey',

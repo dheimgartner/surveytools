@@ -10,6 +10,7 @@ HTMLWidgets.widget({
     var survey;
     var flag_init = false;
     var container = document.getElementById(el.id);
+    var answer_tracker;
 
     return {
 
@@ -25,6 +26,8 @@ HTMLWidgets.widget({
           // update survey object
           survey = new Survey.Model(x.survey_json);
           container.widget = this;
+
+          answer_tracker = x['answers'];
         }
 
         $(function() {
@@ -43,6 +46,12 @@ HTMLWidgets.widget({
           } catch(err) {}
         }
 
+        // on complete write answer_tracker back to x
+        function saveAnswers(sender) {
+          x['answers'] = answer_tracker;
+          // TODO: send to shiny here...
+        }
+        survey.onComplete.add(saveAnswers);
       },
 
       resize: function(width, height) {
@@ -67,7 +76,7 @@ HTMLWidgets.widget({
       dumpAnswers: function(params) {
         function attachAnswers(sender) {
           const answers = JSON.stringify(sender.data);
-          x['answers'] = answers;
+          answer_tracker = answers;
         }
 
         survey.onComplete.add(attachAnswers);
