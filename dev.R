@@ -42,7 +42,7 @@ s
 s$x <- SURVEY
 s
 
-s3 <- htmlwidgets::onRender(s, JS("function(el, x, data){this.showProgressBar = data}"), data = TRUE)
+s3 <- htmlwidgets::onRender(s, JS("function(el, x, data){this['s'].showProgressBar = data}"), data = "bottom")
 s3 <- htmlwidgets::onRender(s, JS("function(el, x, data){console.log(this)}"))
 s3
 
@@ -63,3 +63,13 @@ showQuestionNumber <- function(survey, on = TRUE) {
 s %>% showQuestionNumber(on = TRUE)
 s %>% showQuestionNumber(on = FALSE)
 
+showProgressBar <- function(survey, position = c("off", "top", "bottom", "both")) {
+  position <- match.arg(position)
+  s <- jsonlite::fromJSON(survey$x$survey_json)
+  s$showProgressBar <- position
+  survey$x$survey_json <- jsonlite::toJSON(s, auto_unbox = TRUE)
+  survey
+}
+
+s %>% showProgressBar(position = "off")
+s %>% showProgressBar(position = "both")
