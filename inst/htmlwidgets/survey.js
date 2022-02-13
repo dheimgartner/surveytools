@@ -27,18 +27,11 @@ HTMLWidgets.widget({
           container.widget = this;
         }
 
-        function alertResults(sender) {
-          const results = JSON.stringify(sender.data);
-          alert(results);
-        }
-
-        survey.onComplete.add(alertResults);
-
         $(function() {
           $(el).Survey({ model: survey });
         });
 
-        // Now that the timeline is initialized call any outstanding API
+        // Now that the survey is initialized call any outstanding API
         var numApiCalls = x['api'].length;
         for(var i = 0; i < numApiCalls; i++) {
           var call = x['api'][i];
@@ -69,6 +62,23 @@ HTMLWidgets.widget({
 
       nextPage: function(params) {
         survey.nextPage();
+      },
+
+      dumpAnswers: function(params) {
+        function()attachAnswers(sender) {
+          const answers = JSON.stringify(sender.data);
+          x['answers'] = answers;
+        }
+        survey.onComplete.add(attachAnswers);
+
+        /*
+        attachAnswers(sender) {
+          const answers = JSON.stringify(sender.data);
+          x['answers'] = answers;
+        }
+
+        survey.onComplete.add(attachAnswers);
+        */
       },
 
       // Make the survey object availabel as a property on the widget

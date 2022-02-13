@@ -14,3 +14,9 @@ nextPage <- function(id) {
   method <- "nextPage"
   callJS()
 }
+
+
+dumpAnswers <- function(id) {
+  method <- "dumpAnswers"
+  callJS()
+}
