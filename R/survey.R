@@ -16,10 +16,8 @@ survey <- function(survey_json, width = NULL, height = NULL, elementId = NULL) {
   x$api <- list()
 
   # answer tracker
+  # redundant at the moment
   x$answers <- list()
-
-  # test
-  x$test <- list()
 
   # create widget
   htmlwidgets::createWidget(

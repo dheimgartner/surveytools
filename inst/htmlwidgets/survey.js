@@ -9,7 +9,8 @@ HTMLWidgets.widget({
     // define shared variables for this instance
     var survey;
     var flag_init = false;
-    var container = document.getElementById(el.id);
+    var elementId = el.id;
+    var container = document.getElementById(elementId);
     var answer_tracker;
 
     return {
@@ -27,7 +28,9 @@ HTMLWidgets.widget({
           survey = new Survey.Model(x.survey_json);
           container.widget = this;
 
+          /* redundant at the moment
           answer_tracker = x['answers'];
+          */
         }
 
         $(function() {
@@ -46,12 +49,14 @@ HTMLWidgets.widget({
           } catch(err) {}
         }
 
+        /* redundant at the moment
         // on complete write answer_tracker back to x
         function saveAnswers(sender) {
           x['answers'] = answer_tracker;
           // TODO: send to shiny here (or below in API)...
         }
         survey.onComplete.add(saveAnswers);
+        */
       },
 
       resize: function(width, height) {
@@ -74,20 +79,39 @@ HTMLWidgets.widget({
       },
 
       answersOnComplete: function(params) {
-        function attachAnswers(sender) {
-          const answers = JSON.stringify(sender.data);
-          answer_tracker = answers;
+        var shinyMode = HTMLWidgets.shinyMode;
+        if(shinyMode) {
+          function attachAnswers(sender) {
+            answer_tracker = JSON.stringify(sender.data);
+            Shiny.onInputChange(elementId + '_answersOnComplete', answer_tracker);
+          }
+        } else {
+          function attachAnswers(sender) {
+            answer_tracker = JSON.stringify(sender.data);
+          }
         }
 
         survey.onComplete.add(attachAnswers);
       },
 
       onValueChanged: function(params) {
+        var shinyMode = HTMLWidgets.shinyMode;
         switch(params.tracking) {
           case 'on':
-            survey.onValueChanged.add(function(sender, options) {
-              alert(`${ options.question.name } changed to ${ options.question.value }`);
-            });
+            if(shinyMode) {
+              survey.onValueChanged.add(function(sender, options) {
+                if(options.question.name == params.question_name) {
+                  Shiny.onInputChange(elementId + '_' + params.question_name + '_onValueChanged',
+                    options.question.value
+                  );
+                }
+              })
+            } else {
+              // not really useful...
+              survey.onValueChanged.add(function(sender, options) {
+                alert(`${ options.question.name } changed to ${ options.question.value }`);
+              });
+            }
             break;
           case 'off':
             break;

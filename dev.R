@@ -6,16 +6,39 @@ library(shiny)
 
 ui <- fluidPage(
   theme = bslib::bs_theme(bootswatch = "slate"),
-  surveyOutput("blobb"),
-  actionButton("button", "Next Page")
+  actionButton("button", "Next Page"),
+  # actionButton("stop_tracking", "Stop Tracking"),
+  surveyOutput("blobb")
 )
 
 
 server <- function(input, output, session) {
-  my_survey <- survey(SURVEY)
+  my_survey <-
+    survey(SURVEY) %>%
+    onValueChanged(question_name = "gender", tracking = "on") %>%
+    onValueChanged(question_name = "lonely", tracking = "on") %>%
+    answersOnComplete()
+
   output$blobb <- renderSurvey(my_survey)
   observeEvent(input$button, {
     nextPage("blobb")
+  })
+
+  # TODO: remove onValueChanged event listener in case "off"!
+  observeEvent(input$stop_tracking, {
+    onValueChanged("blobb", question_name = "gender", tracking = "off")
+  })
+
+  observeEvent(input$blobb_answersOnComplete, {
+    answers <<- input$blobb_answersOnComplete
+  })
+
+  observeEvent(input$blobb_gender_onValueChanged, {
+    cat("`gender` value changed to", input$blobb_gender_onValueChanged, "\n")
+  })
+
+  observeEvent(input$blobb_lonely_onValueChanged, {
+    cat("`lonely` value changed to", input$blobb_lonely_onValueChanged, "\n")
   })
 }
 
