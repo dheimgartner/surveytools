@@ -65,20 +65,12 @@ HTMLWidgets.widget({
       },
 
       dumpAnswers: function(params) {
-        function()attachAnswers(sender) {
-          const answers = JSON.stringify(sender.data);
-          x['answers'] = answers;
-        }
-        survey.onComplete.add(attachAnswers);
-
-        /*
-        attachAnswers(sender) {
+        function attachAnswers(sender) {
           const answers = JSON.stringify(sender.data);
           x['answers'] = answers;
         }
 
         survey.onComplete.add(attachAnswers);
-        */
       },
 
       // Make the survey object availabel as a property on the widget
