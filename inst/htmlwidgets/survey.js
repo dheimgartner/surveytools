@@ -21,7 +21,7 @@ HTMLWidgets.widget({
           // apply bootstrap
           Survey
             .StylesManager
-            .applyTheme("bootstrap");
+            .applyTheme('bootstrap');
 
           // update survey object
           survey = new Survey.Model(x.survey_json);
@@ -49,7 +49,7 @@ HTMLWidgets.widget({
         // on complete write answer_tracker back to x
         function saveAnswers(sender) {
           x['answers'] = answer_tracker;
-          // TODO: send to shiny here...
+          // TODO: send to shiny here (or below in API)...
         }
         survey.onComplete.add(saveAnswers);
       },
@@ -73,13 +73,29 @@ HTMLWidgets.widget({
         survey.nextPage();
       },
 
-      dumpAnswers: function(params) {
+      answersOnComplete: function(params) {
         function attachAnswers(sender) {
           const answers = JSON.stringify(sender.data);
           answer_tracker = answers;
         }
 
         survey.onComplete.add(attachAnswers);
+      },
+
+      onValueChanged: function(params) {
+        switch(params.tracking) {
+          case 'on':
+            survey.onValueChanged.add(function(sender, options) {
+              alert(`${ options.question.name } changed to ${ options.question.value }`);
+            });
+            break;
+          case 'off':
+            break;
+        }
+      },
+
+      callback: function(params) {
+        console.log("callback not implemented (survey not found)...");
       },
 
       // Make the survey object availabel as a property on the widget
@@ -93,7 +109,7 @@ HTMLWidgets.widget({
 
 // shiny API
 if (HTMLWidgets.shinyMode) {
-  var fxns = ['addNewPage', 'setValue', 'nextPage'];
+  var fxns = ['addNewPage', 'setValue', 'nextPage', 'answersOnComplete', 'onValueChanged', 'callback'];
 
   var addShinyHandler = function(fxn) {
     return function() {

@@ -16,7 +16,36 @@ nextPage <- function(id) {
 }
 
 
-dumpAnswers <- function(id) {
-  method <- "dumpAnswers"
+answersOnComplete <- function(id) {
+  method <- "answersOnComplete"
   callJS()
 }
+
+
+onValueChanged <- function(id, tracking = c("on", "off")) {
+  tracking <- match.arg(tracking)
+  method <- "onValueChanged"
+  callJS()
+}
+
+
+#' Evaluate any JavaScript code after the `survey` object has been initialized
+#'
+#' @param id widget or input$id
+#' @param JS use `htmlwidgets::JS`
+#'
+#' @source <https://surveyjs.io/Documentation/Library?id=SurveyModel/>
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' # The `onValueChanged` api could be implemented via
+#' \dontrun{
+#'
+#' }
+callback <- function(id, JS) {
+  method <- "callback"
+  callJS()
+}
+
