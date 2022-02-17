@@ -1,31 +1,31 @@
 addNewPage <- function(id, page_name) {
   method <- "addNewPage"
-  callJS()
+  callJS(type = "survey")
 }
 
 
 setValue <- function(id, name, value) {
   method <- "setValue"
-  callJS()
+  callJS(type = "survey")
 }
 
 
 nextPage <- function(id) {
   method <- "nextPage"
-  callJS()
+  callJS(type = "survey")
 }
 
 
 answersOnComplete <- function(id) {
   method <- "answersOnComplete"
-  callJS()
+  callJS(type = "survey")
 }
 
 
 onValueChanged <- function(id, question_name, tracking = c("on", "off")) {
   tracking <- match.arg(tracking)
   method <- "onValueChanged"
-  callJS()
+  callJS(type = "survey")
 }
 
 
@@ -46,6 +46,6 @@ onValueChanged <- function(id, question_name, tracking = c("on", "off")) {
 #' }
 callback <- function(id, JS) {
   method <- "callback"
-  callJS()
+  callJS(type = "survey")
 }
 

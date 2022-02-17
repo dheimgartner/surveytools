@@ -33,6 +33,7 @@ HTMLWidgets.widget({
           */
         }
 
+        // assign survey to dom
         $(function() {
           $(el).Survey({ model: survey });
         });
