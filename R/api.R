@@ -1,32 +1,68 @@
-## implemented in api_page
-# addNewPage <- function(id, page_name) {
-#   method <- "addNewPage"
-#   callJS(type = "survey")
-# }
+showNavigationButtons <- function(id, show = TRUE) {
+  method <- "showNavigationButtons"
+  callJS()
+}
+
+
+
+addNewPage <- function(id, name, index) {
+  method <- "addNewPage"
+  callJS()
+}
+
+
+addNewQuestion <- function(id, questionType, name, index) {
+  method <- "addNewQuestion"
+  callJS()
+}
+
+
+title <- function(id, title) {
+  method <- "title"
+  callJS()
+}
+
+
+name <- function(id, name) {
+  method <- "name"
+  callJS()
+}
+
+
+description <- function(id, description) {
+  method <- "description"
+  callJS()
+}
+
+
+toJSON <- function(id) {
+  method <- "toJSON"
+  callJS()
+}
 
 
 setValue <- function(id, name, value) {
   method <- "setValue"
-  callJS(type = "survey")
+  callJS()
 }
 
 
 nextPage <- function(id) {
   method <- "nextPage"
-  callJS(type = "survey")
+  callJS()
 }
 
 
 answersOnComplete <- function(id) {
   method <- "answersOnComplete"
-  callJS(type = "survey")
+  callJS()
 }
 
 
 onValueChanged <- function(id, question_name, tracking = c("on", "off")) {
   tracking <- match.arg(tracking)
   method <- "onValueChanged"
-  callJS(type = "survey")
+  callJS()
 }
 
 
@@ -47,6 +83,6 @@ onValueChanged <- function(id, question_name, tracking = c("on", "off")) {
 #' }
 callback <- function(id, JS) {
   method <- "callback"
-  callJS(type = "survey")
+  callJS()
 }
 

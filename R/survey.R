@@ -5,7 +5,7 @@
 #' @import htmlwidgets
 #'
 #' @export
-survey <- function(survey_json, width = NULL, height = NULL, elementId = NULL) {
+survey <- function(survey_json = NULL, width = NULL, height = NULL, elementId = NULL) {
 
   # forward options using x
   x <- list(

@@ -8,9 +8,12 @@ HTMLWidgets.widget({
 
     // define shared variables for this instance
     var survey;
+    var page;
+    var question;
     var flag_init = false;
     var elementId = el.id;
     var container = document.getElementById(elementId);
+    var shinyMode = HTMLWidgets.shinyMode;
     var answer_tracker;
 
     return {
@@ -24,8 +27,13 @@ HTMLWidgets.widget({
             .StylesManager
             .applyTheme('bootstrap');
 
-          // update survey object
-          survey = new Survey.Model(x.survey_json);
+          // init survey object
+          if(x.survey_json === null) {
+            survey = new Survey.Model();
+          } else {
+            survey = new Survey.Model(x.survey_json);
+          }
+
           container.widget = this;
 
           /* redundant at the moment
@@ -67,8 +75,33 @@ HTMLWidgets.widget({
       },
 
       // API
+      showNavigationButtons: function(params) {
+        survey.showNavigationButtons = params.show;
+      },
+
       addNewPage: function(params) {
-        survey.addNewPage(params.page_name);
+        page = survey.addNewPage(params.name, params.index);
+      },
+
+      addNewQuestion: function(params) {
+        question = page.addNewQuestion(params.questionType, params.name, params.index);
+      },
+
+      title: function(params) {
+        question.title = params.title;
+      },
+
+      name: function(params) {
+        question.name = params.name;
+      },
+
+      description: function(params) {
+        question.description = params.description;
+      },
+
+      toJSON: function(params) {
+        var json = survey.toJSON();
+        console.log(json);
       },
 
       setValue: function(params) {
@@ -80,7 +113,6 @@ HTMLWidgets.widget({
       },
 
       answersOnComplete: function(params) {
-        var shinyMode = HTMLWidgets.shinyMode;
         if(shinyMode) {
           function attachAnswers(sender) {
             answer_tracker = JSON.stringify(sender.data);
@@ -96,7 +128,6 @@ HTMLWidgets.widget({
       },
 
       onValueChanged: function(params) {
-        var shinyMode = HTMLWidgets.shinyMode;
         switch(params.tracking) {
           case 'on':
             if(shinyMode) {
@@ -156,34 +187,3 @@ if (HTMLWidgets.shinyMode) {
 
 
 
-/*
-Survey
-    .StylesManager
-    .applyTheme("modern");
-
-const surveyJson = {
-    elements: [{
-        name: "FirstName",
-        title: "Enter your first name:",
-        type: "text"
-    }, {
-        name: "LastName",
-        title: "Enter your last name:",
-        type: "text"
-    }]
-};
-
-const survey = new Survey.Model(surveyJson);
-survey.focusFirstQuestionAutomatic = false;
-
-function alertResults (sender) {
-    const results = JSON.stringify(sender.data);
-    alert(results);
-}
-
-survey.onComplete.add(alertResults);
-
-$(function() {
-    $("#surveyContainer").Survey({ model: survey });
-});
-*/
