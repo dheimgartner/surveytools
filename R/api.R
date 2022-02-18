@@ -1,8 +1,28 @@
-showNavigationButtons <- function(id, show = TRUE) {
+locale <- function(id, locale) {
+  method <- "locale"
+  callJS()
+}
+
+
+showNavigationButtons <- function(id, showNavigationButtons = c("bottom", "top", "both", "none")) {
+  showNavigationButtons <- match.arg(showNavigationButtons)
   method <- "showNavigationButtons"
   callJS()
 }
 
+
+showQuestionNumbers <- function(id, showQuestionNumbers = c("on", "onpage", "off")) {
+  showQuestionNumbers <- match.arg(showQuestionNumbers)
+  method <- "showQuestionNumbers"
+  callJS()
+}
+
+
+showProgressBar <- function(id, showProgressBar = c("off", "top", "bottom", "both")) {
+  showProgressBar <- match.arg(showProgressBar)
+  method <- "showProgressBar"
+  callJS()
+}
 
 
 addNewPage <- function(id, name, index) {
@@ -35,6 +55,127 @@ description <- function(id, description) {
 }
 
 
+isRequired <- function(id) {
+  method <- "isRequired"
+  callJS()
+}
+
+
+requiredErrorText <- function(id, requiredErrorText) {
+  method <- "requiredErrorText"
+  callJS()
+}
+
+
+placeHolder <- function(id, placeHolder) {
+  method <- "placeHolder"
+  callJS()
+}
+
+
+visibleIf <- function(id, expression) {
+  method <- "visibleIf"
+  callJS()
+}
+
+
+requiredIf <- function(id, expression) {
+  method <- "requiredIf"
+  callJS()
+}
+
+
+cssClasses <- function(id) {
+  method <- "cssClasses"
+  callJS()
+}
+
+
+defaultValue <- function(id, defaultValue) {
+  method <- "defaultValue"
+  callJS()
+}
+
+
+inputType <- function(id, inputType = c("color", "date", "datetime", "datetime-local", "email", "month", "number", "password", "range", "tel", "text", "time", "url", "week")) {
+  inputType <- match.arg(inputType)
+  method <- "inputType"
+  callJS()
+}
+
+
+max <- function(id, max) {
+  method <- "max"
+  callJS()
+}
+
+
+maxErrorText <- function(id, maxErrorText) {
+  method <- "maxErrorText"
+  callJS()
+}
+
+
+min <- function(id, min) {
+  method <- "min"
+  callJS()
+}
+
+
+minErrorText <- function(id, minErrorText) {
+  method <- "minErrorText"
+  callJS()
+}
+
+
+#' (Not text size)
+#'
+#' @param id
+#' @param size
+#'
+#' @return
+#' @export
+#'
+#' @examples
+size <- function(id, size) {
+  method <- "size"
+  callJS()
+}
+
+
+#' Title
+#'
+#' @param id
+#' @param choices list of named list with names value and text
+#'
+#' @return
+#' @export
+#'
+#' @examples
+choices <- function(id, choices) {
+  method <- "choices"
+  callJS()
+}
+
+
+noneText <- function(id, noneText) {
+  method <- "noneText"
+  callJS()
+}
+
+
+otherPlaceHolder <- function(id, otherPlaceHolder) {
+  method <- "otherPlaceHolder"
+  callJS()
+}
+
+
+otherText <- function(id, otherText) {
+  method <- "otherText"
+  callJS()
+}
+
+
 toJSON <- function(id) {
   method <- "toJSON"
   callJS()
@@ -59,7 +200,7 @@ answersOnComplete <- function(id) {
 }
 
 
-onValueChanged <- function(id, question_name, tracking = c("on", "off")) {
+onValueChanged <- function(id, name, tracking = c("on", "off")) {
   tracking <- match.arg(tracking)
   method <- "onValueChanged"
   callJS()

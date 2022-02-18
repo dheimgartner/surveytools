@@ -1,9 +1,10 @@
+library(shiny)
+
 devtools::load_all()
 
 rm(list = ls())
 
 ui <- fluidPage(
-  actionButton("button", "Next Page"),
   surveyOutput("survey1"),
   actionButton("complete1", "Complete Survey 1"),
   surveyOutput("survey2"),
@@ -14,33 +15,65 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   survey1 <-
     survey() %>%
+    locale("de") %>%
+    showQuestionNumbers("off") %>%
+
     addNewPage("page1") %>%
     addNewQuestion("text") %>%
     title("What's your name?") %>%
     name("name") %>%
-    onValueChanged(question_name = "name", tracking = "on") %>%
+    placeHolder("Your name") %>%
+    inputType("text") %>%
+    onValueChanged(name = "name", tracking = "on") %>%
+
     addNewPage("page2") %>%
     addNewQuestion("text") %>%
     title("How old are you?") %>%
     name("age") %>%
-    onValueChanged(question_name = "age", tracking = "on") %>%
-    showNavigationButtons(show = FALSE) %>%
-    answersOnComplete()
+    inputType("number") %>%
+    size(10) %>%
+    min(18) %>%
+    minErrorText("Du bist zu jung!") %>%
+    max(30) %>%
+    maxErrorText("Du bist zu alt!") %>%
+    requiredIf("{name} == Daniel") %>%
+    requiredErrorText("blobb") %>%
+    onValueChanged(name = "age", tracking = "on") %>%
+    showNavigationButtons("bottom") %>%
+
+    addNewQuestion("radiogroup") %>%
+    title("What's your gender?") %>%
+    name("gender") %>%
+    choices(list(list(value = 1, text = "male"), list(value = 2, text = "female"))) %>%
+    otherText("Other") %>%
+    otherPlaceHolder("Bitte geben Sie an") %>%
+    noneText("This is a none item") %>%
+
+    addNewQuestion("dropdown") %>%
+    title("Where do you come frome?") %>%
+    name("country") %>%
+    choices(list(list(value = "CH", text = "Switzerland"),
+                 list(value = "DE", text = "Deutschland"))) %>%
+
+    answersOnComplete() %>%
+    toJSON()
 
   survey2 <-
     survey() %>%
+    locale("en") %>%
     addNewPage("page1") %>%
     addNewQuestion("text") %>%
     title("What's your name?") %>%
     name("name") %>%
-    onValueChanged(question_name = "name", tracking = "on") %>%
+    onValueChanged(name = "name", tracking = "on") %>%
     addNewPage("page2") %>%
     addNewQuestion("text") %>%
     title("How old are you?") %>%
     name("age") %>%
-    onValueChanged(question_name = "age", tracking = "on") %>%
-    showNavigationButtons(show = TRUE) %>%
-    answersOnComplete()
+    onValueChanged(name = "age", tracking = "on") %>%
+    showNavigationButtons("top") %>%
+    answersOnComplete() %>%
+    toJSON()
 
   output$survey1 <- renderSurvey(survey1)
   output$survey2 <- renderSurvey(survey2)
@@ -84,8 +117,6 @@ shinyApp(ui, server)
 
 
 SURVEY <- preStudy::survey
-
-library(shiny)
 
 ui <- fluidPage(
   theme = bslib::bs_theme(bootswatch = "slate"),
