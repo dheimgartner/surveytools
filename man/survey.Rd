@@ -4,7 +4,7 @@
 \alias{survey}
 \title{<Add Title>}
 \usage{
-survey(survey_json, width = NULL, height = NULL, elementId = NULL)
+survey(survey_json = NULL, width = NULL, height = NULL, elementId = NULL)
 }
 \description{
 <Add Description>
