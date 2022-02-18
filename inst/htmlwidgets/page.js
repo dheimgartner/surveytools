@@ -1,5 +1,9 @@
 HTMLWidgets.widget({
 
+  /*
+  A base class for all questions: https://surveyjs.io/Documentation/Library?id=Question
+  */
+
   name: 'page',
 
   type: 'output',
@@ -7,8 +11,9 @@ HTMLWidgets.widget({
   factory: function(el, width, height) {
 
     // define shared variables for this instance
-    var page;
     var survey;
+    var page;
+    var question;
     var flag_init = false;
     var elementId = el.id;
     var container = document.getElementById(elementId);
@@ -34,8 +39,10 @@ HTMLWidgets.widget({
           container.widget = this;
         }
 
+        /*
         // create new page and add to survey
         page = survey.addNewPage('page');
+        */
 
         // shut off navigation
         survey.showNavigationButtons = false;
@@ -66,12 +73,30 @@ HTMLWidgets.widget({
       },
 
       // API
-      addNewQuestion: function(params) {
-        page.addNewQuestion(params.type, params.parameters)
+      addNewPage: function(params) {
+        page = survey.addNewPage(params.name, params.index);
       },
 
+      addNewQuestion: function(params) {
+        question = page.addNewQuestion(params.questionType, params.name, params.index);
+      },
+
+      title: function(params) {
+        question.title = params.title;
+      },
+
+      name: function(params) {
+        question.name = params.name;
+      },
+
+      description: function(params) {
+        question.description = params.description;
+      },
+
+
+
       addQuestion: function(params) {
-        page.addQuestion(params.question)
+        page.addQuestion(question);
       },
 
       // Make the object availabel as a property on the widget

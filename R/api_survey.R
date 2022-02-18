@@ -1,7 +1,8 @@
-addNewPage <- function(id, page_name) {
-  method <- "addNewPage"
-  callJS(type = "survey")
-}
+## implemented in api_page
+# addNewPage <- function(id, page_name) {
+#   method <- "addNewPage"
+#   callJS(type = "survey")
+# }
 
 
 setValue <- function(id, name, value) {
