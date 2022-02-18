@@ -1,5 +1,88 @@
 devtools::load_all()
 
+rm(list = ls())
+
+ui <- fluidPage(
+  actionButton("button", "Next Page"),
+  surveyOutput("survey1"),
+  actionButton("complete1", "Complete Survey 1"),
+  surveyOutput("survey2"),
+  actionButton("complete2", "Complete Survey 2"),
+)
+
+
+server <- function(input, output, session) {
+  survey1 <-
+    survey() %>%
+    addNewPage("page1") %>%
+    addNewQuestion("text") %>%
+    title("What's your name?") %>%
+    name("name") %>%
+    onValueChanged(question_name = "name", tracking = "on") %>%
+    addNewPage("page2") %>%
+    addNewQuestion("text") %>%
+    title("How old are you?") %>%
+    name("age") %>%
+    onValueChanged(question_name = "age", tracking = "on") %>%
+    showNavigationButtons(show = FALSE) %>%
+    answersOnComplete()
+
+  survey2 <-
+    survey() %>%
+    addNewPage("page1") %>%
+    addNewQuestion("text") %>%
+    title("What's your name?") %>%
+    name("name") %>%
+    onValueChanged(question_name = "name", tracking = "on") %>%
+    addNewPage("page2") %>%
+    addNewQuestion("text") %>%
+    title("How old are you?") %>%
+    name("age") %>%
+    onValueChanged(question_name = "age", tracking = "on") %>%
+    showNavigationButtons(show = TRUE) %>%
+    answersOnComplete()
+
+  output$survey1 <- renderSurvey(survey1)
+  output$survey2 <- renderSurvey(survey2)
+
+  observeEvent(input$button, {
+    nextPage("survey1")
+  })
+
+  observeEvent(input$survey1_answersOnComplete, {
+    answers1 <<- input$survey1_answersOnComplete
+  })
+
+  observeEvent(input$survey2_answersOnComplete, {
+    answers2 <<- input$survey2_answersOnComplete
+  })
+
+  observeEvent(input$survey1_name_onValueChanged, {
+    cat("`survey1 name` value changed to", input$survey1_name_onValueChanged, "\n")
+  })
+
+  observeEvent(input$survey1_age_onValueChanged, {
+    cat("`survey1 age` value changed to", input$survey1_age_onValueChanged, "\n")
+  })
+
+  observeEvent(input$survey2_name_onValueChanged, {
+    cat("`survey2 name` value changed to", input$survey2_name_onValueChanged, "\n")
+  })
+
+  observeEvent(input$survey2_age_onValueChanged, {
+    cat("`survey2 age` value changed to", input$survey2_age_onValueChanged, "\n")
+  })
+}
+
+
+shinyApp(ui, server)
+
+
+
+
+
+
+
 SURVEY <- preStudy::survey
 
 library(shiny)
