@@ -33,3 +33,9 @@ addQuestion <- function(id) {
   method <- "addQuestion"
   callJS(type = "page")
 }
+
+
+toJSON <- function(id) {
+  method <- "toJSON"
+  callJS(type = "page")
+}

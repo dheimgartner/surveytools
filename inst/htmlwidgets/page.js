@@ -93,6 +93,11 @@ HTMLWidgets.widget({
         question.description = params.description;
       },
 
+      toJSON: function(params) {
+        var json = survey.toJSON();
+        console.log(json);
+      },
+
 
 
       addQuestion: function(params) {
