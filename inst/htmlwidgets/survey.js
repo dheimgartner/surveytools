@@ -30,7 +30,8 @@ HTMLWidgets.widget({
                     // init survey object
                     if (x.survey_json === null) {
                         survey = new Survey.Model();
-                    } else {
+                    }
+                    else {
                         survey = new Survey.Model(x.survey_json);
                     }
 
@@ -57,7 +58,8 @@ HTMLWidgets.widget({
                     delete call['method'];
                     try {
                         this[method](call);
-                    } catch (err) {}
+                    }
+                    catch (err) {}
                 }
 
                 /* redundant at the moment
@@ -207,9 +209,11 @@ HTMLWidgets.widget({
                         answer_tracker = JSON.stringify(sender.data);
                         Shiny.onInputChange(elementId + '_answersOnComplete', answer_tracker);
                     }
-                } else {
+                }
+                else {
                     function attachAnswers(sender) {
                         answer_tracker = JSON.stringify(sender.data);
+                        alert(JSON.stringify(answer_tracker));
                     }
                 }
 
@@ -227,10 +231,13 @@ HTMLWidgets.widget({
                                     );
                                 }
                             })
-                        } else {
+                        }
+                        else {
                             // not really useful...
                             survey.onValueChanged.add(function(sender, options) {
-                                alert(`${ options.question.name } changed to ${ options.question.value }`);
+                                if (options.question.name == params.name) {
+                                    alert(`${ options.question.name } changed to ${ options.question.value }`);
+                                }
                             });
                         }
                         break;
@@ -240,6 +247,14 @@ HTMLWidgets.widget({
             },
 
             // Other
+            completedHtml: function(params) {
+              survey.completedHtml = params.completedHtml;
+            },
+
+            showCompletedPage: function(params) {
+              survey.showCompletedPage = params.showCompletedPage;
+            },
+
             callback: function(params) {
                 console.log("callback not implemented (survey not found)...");
             },

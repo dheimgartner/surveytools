@@ -207,6 +207,18 @@ onValueChanged <- function(id, name, tracking = c("on", "off")) {
 }
 
 
+completedHtml <- function(id, completedHtml) {
+  method <- "completedHtml"
+  callJS()
+}
+
+
+showCompletedPage <- function(id, showCompletedPage) {
+  method <- "showCompletedPage"
+  callJS()
+}
+
+
 #' Evaluate any JavaScript code after the `survey` object has been initialized
 #'
 #' @param id widget or input$id

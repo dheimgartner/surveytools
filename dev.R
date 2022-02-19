@@ -30,18 +30,19 @@ server <- function(input, output, session) {
     survey() %>%
     locale("de") %>%
     showQuestionNumbers("off") %>%
+    showNavigationButtons("top") %>%
 
     addNewPage("page1") %>%
     addNewQuestion("text") %>%
-    title("What's your name?") %>%
+    title("Wie heisst du?") %>%
     name("name") %>%
-    placeHolder("Your name") %>%
+    placeHolder("Dein Name") %>%
     inputType("text") %>%
     onValueChanged(name = "name", tracking = "on") %>%
 
     addNewPage("page2") %>%
     addNewQuestion("text") %>%
-    title("How old are you?") %>%
+    title("Wie alt bist du?") %>%
     name("age") %>%
     inputType("number") %>%
     size(10) %>%
@@ -50,25 +51,29 @@ server <- function(input, output, session) {
     max(30) %>%
     maxErrorText("Du bist zu alt!") %>%
     requiredIf("{name} == Daniel") %>%
-    requiredErrorText("blobb") %>%
+    requiredErrorText("Wir brauchen deine Angaben, Daniel!") %>%
     onValueChanged(name = "age", tracking = "on") %>%
-    showNavigationButtons("bottom") %>%
 
+    addNewPage("page3") %>%
     addNewQuestion("radiogroup") %>%
-    title("What's your gender?") %>%
+    title("Geschlecht") %>%
     name("gender") %>%
-    choices(list(list(value = 1, text = "male"), list(value = 2, text = "female"))) %>%
-    otherText("Other") %>%
+    choices(list(list(value = 1, text = "männlich"), list(value = 2, text = "weiblich"))) %>%
+    otherText("Eigene Angabe") %>%
     otherPlaceHolder("Bitte geben Sie an") %>%
-    noneText("This is a none item") %>%
+    noneText("None item") %>%
+    onValueChanged(name = "gender", tracking = "on") %>%
 
+    addNewPage("page4") %>%
     addNewQuestion("dropdown") %>%
-    title("Where do you come frome?") %>%
+    title("Woher kommst du?") %>%
     name("country") %>%
-    choices(list(list(value = "CH", text = "Switzerland"),
+    choices(list(list(value = "CH", text = "Schweiz"),
                  list(value = "DE", text = "Deutschland"))) %>%
+    onValueChanged(name = "country", tracking = "on") %>%
 
     answersOnComplete() %>%
+    completedHtml("<h1>Merci för Teilnahm</h1>") %>%
     toJSON()
 
   survey2 <-
@@ -78,14 +83,12 @@ server <- function(input, output, session) {
     addNewQuestion("text") %>%
     title("What's your name?") %>%
     name("name") %>%
-    onValueChanged(name = "name", tracking = "on") %>%
-    addNewPage("page2") %>%
     addNewQuestion("text") %>%
     title("How old are you?") %>%
     name("age") %>%
-    onValueChanged(name = "age", tracking = "on") %>%
-    showNavigationButtons("top") %>%
+    showNavigationButtons("bottom") %>%
     answersOnComplete() %>%
+    showCompletedPage(FALSE) %>%
     toJSON()
 
   output$survey1 <- renderSurvey(survey1)
