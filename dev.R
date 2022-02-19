@@ -5,6 +5,8 @@ devtools::load_all()
 rm(list = ls())
 
 
+
+
 # multilanguage: does not work...
 s <-
   survey() %>%
@@ -19,10 +21,13 @@ s
 
 ui <- fluidPage(
   surveyOutput("survey1"),
-  actionButton("complete1", "Complete Survey 1"),
+  # actionButton("complete1", "Complete Survey 1"),
   surveyOutput("survey2"),
-  actionButton("complete2", "Complete Survey 2"),
+  # actionButton("complete2", "Complete Survey 2"),
 )
+
+
+
 
 
 server <- function(input, output, session) {
@@ -38,7 +43,7 @@ server <- function(input, output, session) {
     name("name") %>%
     placeHolder("Dein Name") %>%
     inputType("text") %>%
-    onValueChanged(name = "name", tracking = "on") %>%
+    onValueChanged() %>%
 
     addNewPage("page2") %>%
     addNewQuestion("text") %>%
@@ -52,7 +57,7 @@ server <- function(input, output, session) {
     maxErrorText("Du bist zu alt!") %>%
     requiredIf("{name} == Daniel") %>%
     requiredErrorText("Wir brauchen deine Angaben, Daniel!") %>%
-    onValueChanged(name = "age", tracking = "on") %>%
+    onValueChanged() %>%
 
     addNewPage("page3") %>%
     addNewQuestion("radiogroup") %>%
@@ -62,7 +67,7 @@ server <- function(input, output, session) {
     otherText("Eigene Angabe") %>%
     otherPlaceHolder("Bitte geben Sie an") %>%
     noneText("None item") %>%
-    onValueChanged(name = "gender", tracking = "on") %>%
+    onValueChanged() %>%
 
     addNewPage("page4") %>%
     addNewQuestion("dropdown") %>%
@@ -70,33 +75,34 @@ server <- function(input, output, session) {
     name("country") %>%
     choices(list(list(value = "CH", text = "Schweiz"),
                  list(value = "DE", text = "Deutschland"))) %>%
-    onValueChanged(name = "country", tracking = "on") %>%
+    onValueChanged() %>%
 
     answersOnComplete() %>%
-    completedHtml("<h1>Merci för Teilnahm</h1>") %>%
-    toJSON()
+    completedHtml("<h1>Merci för Teilnahm</h1>")
+    # toJSON()
 
   survey2 <-
     survey() %>%
     locale("en") %>%
-    addNewPage("page1") %>%
+
+    addNewPage("page") %>%
     addNewQuestion("text") %>%
     title("What's your name?") %>%
     name("name") %>%
+    onValueChanged() %>%
+
     addNewQuestion("text") %>%
     title("How old are you?") %>%
     name("age") %>%
+    onValueChanged() %>%
+
     showNavigationButtons("bottom") %>%
     answersOnComplete() %>%
-    showCompletedPage(FALSE) %>%
-    toJSON()
+    showCompletedPage(FALSE)
+    # toJSON()
 
   output$survey1 <- renderSurvey(survey1)
   output$survey2 <- renderSurvey(survey2)
-
-  observeEvent(input$button, {
-    nextPage("survey1")
-  })
 
   observeEvent(input$survey1_answersOnComplete, {
     answers1 <<- input$survey1_answersOnComplete
@@ -135,9 +141,7 @@ shinyApp(ui, server)
 SURVEY <- preStudy::survey
 
 ui <- fluidPage(
-  theme = bslib::bs_theme(bootswatch = "slate"),
-  actionButton("button", "Next Page"),
-  # actionButton("stop_tracking", "Stop Tracking"),
+  # actionButton("button", "Next Page"),
   surveyOutput("blobb")
 )
 
@@ -145,19 +149,23 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   my_survey <-
     survey(SURVEY) %>%
-    onValueChanged(question_name = "gender", tracking = "on") %>%
-    onValueChanged(question_name = "lonely", tracking = "on") %>%
-    answersOnComplete()
+    onValueChanged(name = "gender") %>%
+    onValueChanged(name = "lonely") %>%
+    addNewPage("added") %>%
+    addNewQuestion("text") %>%
+    inputType("email") %>%
+    name("Please, specify your mail adress") %>%
+    answersOnComplete() %>%
+    showQuestionNumbers("on") %>%
+    showNavigationButtons("top") %>%
+    showProgressBar("off") %>%
+    showCompletedPage(TRUE)
 
   output$blobb <- renderSurvey(my_survey)
-  observeEvent(input$button, {
-    nextPage("blobb")
-  })
 
-  # TODO: remove onValueChanged event listener in case "off"!
-  observeEvent(input$stop_tracking, {
-    onValueChanged("blobb", question_name = "gender", tracking = "off")
-  })
+  # observeEvent(input$button, {
+  #   nextPage("blobb")
+  # })
 
   observeEvent(input$blobb_answersOnComplete, {
     answers <<- input$blobb_answersOnComplete

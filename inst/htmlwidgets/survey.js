@@ -11,6 +11,7 @@ HTMLWidgets.widget({
         var page;
         var question;
         var flag_init = false;
+        var flag_json = false;
         var elementId = el.id;
         var container = document.getElementById(elementId);
         var shinyMode = HTMLWidgets.shinyMode;
@@ -32,6 +33,7 @@ HTMLWidgets.widget({
                         survey = new Survey.Model();
                     }
                     else {
+                        flag_json = true;
                         survey = new Survey.Model(x.survey_json);
                     }
 
@@ -221,29 +223,44 @@ HTMLWidgets.widget({
             },
 
             onValueChanged: function(params) {
-                switch (params.tracking) {
-                    case 'on':
-                        if (shinyMode) {
-                            survey.onValueChanged.add(function(sender, options) {
-                                if (options.question.name == params.name) {
-                                    Shiny.onInputChange(elementId + '_' + params.name + '_onValueChanged',
-                                        options.question.value
-                                    );
-                                }
-                            })
-                        }
-                        else {
-                            // not really useful...
-                            survey.onValueChanged.add(function(sender, options) {
-                                if (options.question.name == params.name) {
-                                    alert(`${ options.question.name } changed to ${ options.question.value }`);
-                                }
-                            });
-                        }
-                        break;
-                    case 'off':
-                        break;
+                var name = (flag_json) ? params.name : question.name;
+
+                if (flag_json) {
+                    if (params.name === null) console.error("no params.name passed to onValueChanged!");
                 }
+
+                survey.onValueChanged.add(function(sender, options) {
+                    if (shinyMode) {
+                        // shiny mode
+                        if (flag_json) {
+                            if (options.question.name == name) {
+                                Shiny.onInputChange(elementId + '_' + name + '_onValueChanged',
+                                    options.question.value
+                                );
+                            }
+                        } else {
+                            // pipe mode
+                            if (options.question.name == name) {
+                                Shiny.onInputChange(elementId + '_' + name + '_onValueChanged',
+                                    options.question.value
+                                );
+                            }
+                        }
+                    } else {
+                        // not in shiny mode
+                        if (flag_json) {
+                            // survey_json mode
+                            if (options.question.name == name) {
+                                alert(`${ options.question.name } changed to ${ options.question.value }`);
+                            }
+                        } else {
+                            // pipe mode
+                            if (options.question.name == name) {
+                                alert(`${ options.question.name } changed to ${ options.question.value }`);
+                            }
+                        }
+                    }
+                });
             },
 
             // Other

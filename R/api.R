@@ -200,8 +200,7 @@ answersOnComplete <- function(id) {
 }
 
 
-onValueChanged <- function(id, name, tracking = c("on", "off")) {
-  tracking <- match.arg(tracking)
+onValueChanged <- function(id, name = NULL) {
   method <- "onValueChanged"
   callJS()
 }
