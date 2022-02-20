@@ -176,6 +176,12 @@ otherText <- function(id, otherText) {
 }
 
 
+getAllQuestions <- function(id) {
+  method <- "getAllQuestions"
+  callJS()
+}
+
+
 toJSON <- function(id) {
   method <- "toJSON"
   callJS()
@@ -196,6 +202,12 @@ nextPage <- function(id) {
 
 answersOnComplete <- function(id) {
   method <- "answersOnComplete"
+  callJS()
+}
+
+
+doComplete <- function(id) {
+  method <- "doComplete"
   callJS()
 }
 
@@ -233,7 +245,8 @@ showCompletedPage <- function(id, showCompletedPage) {
 #' \dontrun{
 #'
 #' }
-callback <- function(id, JS) {
+callback <- function(id, JS, object = c("survey", "page", "question")) {
+  object <- match.arg(object)
   method <- "callback"
   callJS()
 }

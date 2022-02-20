@@ -5,6 +5,36 @@ devtools::load_all()
 rm(list = ls())
 
 
+survey <-
+  survey() %>%
+  locale("en") %>%
+  showQuestionNumbers("on") %>%
+  showNavigationButtons("top") %>%
+  showCompletedPage(FALSE) %>%
+  showProgressBar("off") %>%
+
+  addNewPage("page1") %>%
+  addNewQuestion("text") %>%
+  inputType("text") %>%
+  title("What's your name?") %>%
+  name("name") %>%
+
+  addNewPage("page2") %>%
+  addNewQuestion("text") %>%
+  inputType("date") %>%
+  title("What's your date of birth?") %>%
+  name("birth_date") %>%
+  callback(JS("function(survey){survey.onComplete.add(function(){alert('blobb');})}"),
+           object = "survey")
+
+survey
+
+ui <- fluidPage(
+  surveyOutput("survey")
+)
+
+
+
 
 
 # multilanguage: does not work...
@@ -19,15 +49,13 @@ s <-
 s
 
 
+
+
 ui <- fluidPage(
+  actionButton("complete1", "Complete Survey 1"),
   surveyOutput("survey1"),
-  # actionButton("complete1", "Complete Survey 1"),
-  surveyOutput("survey2"),
-  # actionButton("complete2", "Complete Survey 2"),
+  surveyOutput("survey2")
 )
-
-
-
 
 
 server <- function(input, output, session) {
@@ -79,6 +107,7 @@ server <- function(input, output, session) {
 
     answersOnComplete() %>%
     completedHtml("<h1>Merci för Teilnahm</h1>")
+    # getAllQuestions()
     # toJSON()
 
   survey2 <-
@@ -103,6 +132,10 @@ server <- function(input, output, session) {
 
   output$survey1 <- renderSurvey(survey1)
   output$survey2 <- renderSurvey(survey2)
+
+  observeEvent(input$complete1, {
+    doComplete("survey1")
+  })
 
   observeEvent(input$survey1_answersOnComplete, {
     answers1 <<- input$survey1_answersOnComplete

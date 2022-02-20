@@ -16,6 +16,7 @@ HTMLWidgets.widget({
         var container = document.getElementById(elementId);
         var shinyMode = HTMLWidgets.shinyMode;
         var answer_tracker;
+        var api;
 
         return {
 
@@ -38,6 +39,7 @@ HTMLWidgets.widget({
                     }
 
                     container.widget = this;
+                    api = x.api;
 
                     /* redundant at the moment
                     answer_tracker = x['answers'];
@@ -60,8 +62,7 @@ HTMLWidgets.widget({
                     delete call['method'];
                     try {
                         this[method](call);
-                    }
-                    catch (err) {}
+                    } catch (err) {}
                 }
 
                 /* redundant at the moment
@@ -195,6 +196,11 @@ HTMLWidgets.widget({
                 question.otherText = params.otherText;
             },
 
+            getAllQuestions: function(params) {
+                var message = `getAllQuestions:\n${JSON.stringify(survey.getAllQuestions())}`;
+                alert(message);
+            },
+
             // Answers
             toJSON: function(params) {
                 var message = `toJSON:\n${JSON.stringify(survey.toJSON())}`;
@@ -208,6 +214,7 @@ HTMLWidgets.widget({
             answersOnComplete: function(params) {
                 if (shinyMode) {
                     function attachAnswers(sender) {
+                        console.log('blobb');
                         answer_tracker = JSON.stringify(sender.data);
                         Shiny.onInputChange(elementId + '_answersOnComplete', answer_tracker);
                     }
@@ -220,6 +227,14 @@ HTMLWidgets.widget({
                 }
 
                 survey.onComplete.add(attachAnswers);
+            },
+
+            doComplete: function(params) {
+                try {
+                    survey.doComplete();
+                } catch(error) {
+                    console.error(error);
+                }
             },
 
             onValueChanged: function(params) {
@@ -273,12 +288,24 @@ HTMLWidgets.widget({
             },
 
             callback: function(params) {
-                console.log("callback not implemented (survey not found)...");
+                switch(params.object) {
+                    case 'survey':
+                        params.JS(survey = survey);
+                        break;
+                    case 'page':
+                        params.JS(page = page);
+                        break;
+                    case 'question':
+                        params.JS(question = question);
+                        break;
+                    default:
+                        params.JS();
+                } 
             },
 
             // Make the survey object availabel as a property on the widget
-            // instance -> allows for direct interaction if needed...
-            s: survey
+            // instance -> allows for direct interaction if needed... return from factory
+            survey: survey
 
         };
     }
@@ -312,11 +339,14 @@ if (HTMLWidgets.shinyMode) {
         'noneText',
         'otherPlaceHolder',
         'otherText',
+        'getAllQuestions',
         'toJSON',
         'setValue',
         'nextPage',
         'answersOnComplete',
-        'onValueChanged'
+        'doComplete',
+        'onValueChanged',
+        'callback'
     ];
 
     var addShinyHandler = function(fxn) {
