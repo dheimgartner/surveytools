@@ -24,17 +24,28 @@ survey <-
   inputType("date") %>%
   title("What's your date of birth?") %>%
   name("birth_date") %>%
-  callback(JS("function(survey){survey.onComplete.add(function(){alert('blobb');})}"),
-           object = "survey")
+
+  addNewPage("page3") %>%
+  addNewQuestion("html") %>%
+  html(HTML("<h1>hello, world</h1><br><button id='action' type='button' class='btn btn-default action-button'>Action</button>"))
+  # callback(JS("function(question){question.html = '<h1>hello, world!</h1>';}"), object = "question") %>%
+  # callback(JS("function(){console.log('blobb');}"))
 
 survey
 
+
 ui <- fluidPage(
+  HTML("<h1>hello, world</h1><br><button id='action' type='button' class='btn btn-default action-button'>Action</button>"),
   surveyOutput("survey")
+
 )
 
+server <- function(input, output, session) {
+  output$survey <- renderSurvey(survey)
+  observeEvent(input$action, {cat("action\n")})
+}
 
-
+shinyApp(ui, server)
 
 
 # multilanguage: does not work...

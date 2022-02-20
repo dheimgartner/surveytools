@@ -201,6 +201,10 @@ HTMLWidgets.widget({
                 alert(message);
             },
 
+            html: function(params) {
+                question.html = params.html;
+            },
+
             // Answers
             toJSON: function(params) {
                 var message = `toJSON:\n${JSON.stringify(survey.toJSON())}`;
@@ -340,6 +344,7 @@ if (HTMLWidgets.shinyMode) {
         'otherPlaceHolder',
         'otherText',
         'getAllQuestions',
+        'html',
         'toJSON',
         'setValue',
         'nextPage',

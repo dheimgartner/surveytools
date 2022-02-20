@@ -182,6 +182,12 @@ getAllQuestions <- function(id) {
 }
 
 
+html <- function(id, html) {
+  method <- "html"
+  callJS()
+}
+
+
 toJSON <- function(id) {
   method <- "toJSON"
   callJS()
@@ -245,7 +251,7 @@ showCompletedPage <- function(id, showCompletedPage) {
 #' \dontrun{
 #'
 #' }
-callback <- function(id, JS, object = c("survey", "page", "question")) {
+callback <- function(id, JS, object = c("default", "survey", "page", "question")) {
   object <- match.arg(object)
   method <- "callback"
   callJS()
