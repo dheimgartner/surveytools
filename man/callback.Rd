@@ -7,7 +7,7 @@
 \url{https://surveyjs.io/Documentation/Library?id=SurveyModel/}
 }
 \usage{
-callback(id, JS)
+callback(id, JS, object = c("default", "survey", "page", "question"))
 }
 \arguments{
 \item{id}{widget or input$id}
