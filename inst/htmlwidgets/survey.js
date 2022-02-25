@@ -197,8 +197,14 @@ HTMLWidgets.widget({
             },
 
             getAllQuestions: function(params) {
-                var message = `getAllQuestions:\n${JSON.stringify(survey.getAllQuestions())}`;
-                alert(message);
+                if (shinyMode) {
+                    var all_questions = JSON.stringify(survey.getAllQuestions());
+                    Shiny.onInputChange(elementId + '_getAllQuestions', all_questions);
+                }
+                else {
+                    var message = `getAllQuestions:\n${JSON.stringify(survey.getAllQuestions())}`;
+                    alert(message);
+                }
             },
 
             html: function(params) {
@@ -304,7 +310,7 @@ HTMLWidgets.widget({
                         break;
                     default:
                         params.JS();
-                } 
+                }
             },
 
             // Make the survey object availabel as a property on the widget
