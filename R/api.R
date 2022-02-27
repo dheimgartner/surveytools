@@ -179,6 +179,36 @@ choices <- function(id, choices) {
 }
 
 
+#' Define rows for matrix questions
+#'
+#' @param id
+#' @param rows list of named list with names value and text
+#'
+#' @return
+#' @export
+#'
+#' @examples
+rows <- function(id, rows) {
+  method <- "rows"
+  callJS()
+}
+
+
+#' Define columns for matrix questions
+#'
+#' @param id
+#' @param columns list of named list with names value and text
+#'
+#' @return
+#' @export
+#'
+#' @examples
+columns <- function(id, columns) {
+  method <- "columns"
+  callJS()
+}
+
+
 #' @export
 noneText <- function(id, noneText) {
   method <- "noneText"
@@ -251,7 +281,21 @@ doComplete <- function(id) {
 
 #' @export
 onValueChanged <- function(id, name = NULL) {
+  .Deprecated(new = "track", msg = " onValueChanged is depracated. \n Use track(): works with matrix questions (returns named list) and has cleaner JS implementation!")
   method <- "onValueChanged"
+  callJS()
+}
+
+
+track <- function(id, name = NULL) {
+  method <- "track"
+  callJS()
+}
+
+
+#' @export
+onMatrixCellValueChanged <- function(id, name = NULL) {
+  method <- "onMatrixCellValueChanged"
   callJS()
 }
 

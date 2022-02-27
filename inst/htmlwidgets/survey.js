@@ -181,6 +181,14 @@ HTMLWidgets.widget({
                 question.choices = params.choices;
             },
 
+            rows: function(params) {
+                question.rows = params.rows;
+            },
+
+            columns: function(params) {
+                question.columns = params.columns;
+            },
+
             noneText: function(params) {
                 question.hasNone = true;
                 question.noneText = params.noneText;
@@ -251,9 +259,10 @@ HTMLWidgets.widget({
                 var name = (flag_json) ? params.name : question.name;
 
                 if (flag_json) {
-                    if (params.name === null) console.error("no params.name passed to onValueChanged!");
+                    if (params.name === null) console.error('no params.name passed to onValueChanged!');
                 }
 
+                // TODO: check: inner if looks rather redundant (for both shiny mode and pipe mode...) -> use track() instead!
                 survey.onValueChanged.add(function(sender, options) {
                     if (shinyMode) {
                         // shiny mode
@@ -284,6 +293,39 @@ HTMLWidgets.widget({
                                 alert(`${ options.question.name } changed to ${ options.question.value }`);
                             }
                         }
+                    }
+                });
+            },
+
+            track: function(params) {
+                var name = (flag_json) ? params.name : question.name;
+
+                if (flag_json) {
+                    if (params.name === null) console.error('no params.name passed to tracker!');
+                }
+
+                survey.onValueChanged.add(function(sender, options) {
+
+                    if (shinyMode) {
+                        if (options.question.name == name) {
+                            Shiny.onInputChange(elementId + '_' + name + '_track',
+                                options.question.value
+                            );
+                        }
+                    } else {
+                        if (options.question.name == name) {
+                            alert(`${ options.question.name } changed ${ JSON.stringify(options.question.value)}`);
+                        }
+                    }
+
+                });
+
+            },
+
+            onMatrixCellValueChanged: function(params) {
+                survey.onValueChanged.add(function(sender, options) {
+                    if (options.question.name == question.name) {
+                        alert(JSON.stringify(options.question.value));
                     }
                 });
             },
@@ -346,6 +388,8 @@ if (HTMLWidgets.shinyMode) {
         'min',
         'minErrorText',
         'choices',
+        'rows',
+        'columns',
         'noneText',
         'otherPlaceHolder',
         'otherText',
@@ -357,6 +401,8 @@ if (HTMLWidgets.shinyMode) {
         'answersOnComplete',
         'doComplete',
         'onValueChanged',
+        'track',
+        'onMatrixCellValueChanged',
         'callback'
     ];
 

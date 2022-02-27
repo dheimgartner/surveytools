@@ -4,6 +4,54 @@ devtools::load_all()
 
 rm(list = ls())
 
+# infer from json...
+survey <-
+  survey() %>%
+  locale("en") %>%
+  showCompletedPage(FALSE) %>%
+  showProgressBar("off") %>%
+
+  addNewPage("single") %>%
+  addNewQuestion("matrix") %>%
+  title("Do you like...") %>%
+  name("single") %>%
+  rows(list(list(value = 1, text = "...pizza"), list(value = 2, text = "...ravioli"))) %>%
+  columns(list(list(value = 1, text = "yes"), list(value = 0, text = "no"))) %>%
+  track() %>%
+
+  addNewPage("radio") %>%
+  addNewQuestion("radiogroup") %>%
+  title("What do you prefer?") %>%
+  name("radio") %>%
+  choices(list(list(value = "pizza", text = "Pizza"), list(value = "ravioli", text = "Ravioli"))) %>%
+  onValueChanged() %>%
+
+  answersOnComplete()
+
+survey
+
+ui <- fluidPage(
+  surveyOutput("survey")
+)
+
+server <- function(input, output, session) {
+  output$survey <- renderSurvey(survey)
+
+  observeEvent(input$survey_single_track, {
+    browser()
+    test1 <<- input$survey_single_track
+  })
+
+  observeEvent(input$survey_radio_track, {
+    test2 <<- input$survey_radio_track
+  })
+}
+
+shinyApp(ui, server)
+
+
+
+
 
 survey <-
   survey() %>%
