@@ -233,7 +233,7 @@ HTMLWidgets.widget({
                 if (shinyMode) {
                     function attachAnswers(sender) {
                         console.log('blobb');
-                        answer_tracker = JSON.stringify(sender.data);
+                        answer_tracker = sender.data;
                         Shiny.onInputChange(elementId + '_answersOnComplete', answer_tracker);
                     }
                 }
