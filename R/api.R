@@ -287,6 +287,7 @@ onValueChanged <- function(id, name = NULL) {
 }
 
 
+#' @export
 track <- function(id, name = NULL) {
   method <- "track"
   callJS()
